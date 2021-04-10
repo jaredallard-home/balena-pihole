@@ -1,21 +1,23 @@
-version: "2"
-slug: "balena-pihole"
 name: "Pi-hole"
 type: "sw.application"
+description: "Pi-hole is a Linux network-level advertisement and Internet tracker blocking application!"
 assets:
-  - url: "https://github.com/klutchell/balena-pihole"
-    name: "repository"
-  - url: "https://raw.githubusercontent.com/klutchell/balena-pihole/main/logo.png"
-    name: "logo"
+  repository:
+    type: "blob.asset"
+    data:
+      url: "https://github.com/klutchell/balena-pihole"
+  logo:
+    type: "blob.asset"
+    data:
+      url: "https://raw.githubusercontent.com/klutchell/balena-pihole/main/logo.png"
 data:
-  description: "raspberrypi3 balenaCloud stack with Pi-hole, PADD, & dnscrypt-proxy"
+  applicationConfigVariables:
+    - BALENA_HOST_CONFIG_gpu_mem: 64
   applicationEnvironmentVariables:
-    - TZ: 'America/Toronto'
-    - DNSMASQ_LISTENING: 'eth0'
     - INTERFACE: 'eth0'
     - WEBPASSWORD: 'mysecretpassword'
-    - DNS1: '127.0.0.1#5053'
-    - DNS2: '127.0.0.1#5053'
+    - PIHOLE_DNS_: '1.1.1.1;1.0.0.1'
+    - FBCP_DISPLAY: ""
   defaultDeviceType: "raspberrypi3"
   supportedDeviceTypes:
     - "raspberry-pi2"
@@ -23,3 +25,4 @@ data:
     - "raspberrypi3-64"
     - "raspberrypi4-64"
     - "fincm3"
+    - "nanopi-neo-air"

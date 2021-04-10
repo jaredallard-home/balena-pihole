@@ -1,9 +1,8 @@
-version: '2.1'
+version: "2.1"
 
 volumes:
   pihole_config:
   dnsmasq_config:
-  dnscrypt_config:
 
 services:
   # https://hub.docker.com/r/pihole/pihole
@@ -16,19 +15,26 @@ services:
     dns:
       - "127.0.0.1"
       - "1.1.1.1"
-    environment:
-      DNSMASQ_LISTENING: eth0
-      INTERFACE: eth0
-      DNS1: 127.0.0.1#5053
-      DNS2: 127.0.0.1#5053
     network_mode: host
-    labels:
-      io.balena.features.dbus: '1'
 
-  # set pihole DNS1 and DNS2 service variables to 127.0.0.1#5053 to use dnscrypt-proxy for upstream DNS
-  dnscrypt-proxy:
-    build: ./dnscrypt-proxy
-    volumes:
-      - 'dnscrypt_config:/config'
+  # https://github.com/klutchell/unbound-dnscrypt
+  unbound:
+    build: ./unbound
+    privileged: true
     ports:
-      - '5053:5053/udp'
+      - "5053:5053/tcp"
+      - "5053:5053/udp"
+
+  # https://github.com/balenablocks/fbcp
+  fbcp:
+    image: balenablocks/fbcp:1.0.0
+    privileged: true
+
+  # prevent plymouth from blocking fbcp
+  # https://github.com/klutchell/balena-pihole/issues/25
+  # https://github.com/balena-os/meta-balena/issues/1772
+  dbus:
+    build: dbus
+    restart: on-failure
+    labels:
+        io.balena.features.dbus: "1"
