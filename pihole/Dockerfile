@@ -1,4 +1,4 @@
-FROM pihole/pihole:v5.7
+FROM pihole/pihole:v5.8.1
 
 WORKDIR /usr/src/app
 
@@ -29,3 +29,5 @@ ENV DNSMASQ_LISTENING single
 ENV PIHOLE_DNS_ 1.1.1.1;1.0.0.1
 ENV FONTFACE Terminus
 ENV FONTSIZE 8x14
+ENV WEBPASSWORD balena
+ENV BALENA_HOSTNAME pihole
